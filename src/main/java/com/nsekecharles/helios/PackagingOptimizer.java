@@ -1,35 +1,40 @@
 package com.nsekecharles.helios;
 
-import java.util.StringJoiner;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PackagingOptimizer {
-    public static final int boxSize = 10;
+    public static final int boxSizeLimit = 10;
 
     public static String optimize(String articles) {
 
         char[] articlesNumber = articles.toCharArray();
-
-        StringJoiner joiner = new StringJoiner("/");
-
-        int currentSize = 0;
-        StringBuilder boxContent = new StringBuilder();
+        List<List<Integer>> boxesContent = new ArrayList<>();
+        boxesContent.add(new ArrayList<>());
 
         for (char c : articlesNumber) {
             int parsedArticlesNumber = Character.getNumericValue(c);
-            if (currentSize + parsedArticlesNumber <= boxSize) {
-                currentSize += parsedArticlesNumber;
-                boxContent.append(parsedArticlesNumber);
-            } else {
-                joiner.add(boxContent);
-                boxContent = new StringBuilder();
-                boxContent.append(parsedArticlesNumber);
-                currentSize = parsedArticlesNumber;
+            boolean added = false;
+            for (List<Integer> box : boxesContent) {
+                if (box.stream().reduce(0, Integer::sum) + parsedArticlesNumber <= boxSizeLimit) {
+                    box.add(parsedArticlesNumber);
+                    added = true;
+                    break;
+                }
             }
+            if(!added) {
+                List<Integer> box = new ArrayList<>();
+                box.add(parsedArticlesNumber);
+                boxesContent.add(box);
+            }
+
         }
 
-        joiner.add(boxContent);
-
-        return joiner.toString();
+        return boxesContent.stream()
+                .map(box-> box.stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.joining()))
+                .collect(Collectors.joining("/"));
     }
 }

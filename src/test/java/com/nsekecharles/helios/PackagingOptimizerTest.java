@@ -63,11 +63,11 @@ class PackagingOptimizerTest {
         String actual = PackagingOptimizer.optimize(input);
 
         // Assert
-        assertThat(actual).isEqualTo("3/8/36");
+        assertThat(actual).isEqualTo("33/8/6");
     }
 
     @Test
-    void should_return_expected_exemple() {
+    void should_return_optimized_number_of_boxes() {
         // Given
         var input = "163841689525773";
 
@@ -75,6 +75,6 @@ class PackagingOptimizerTest {
         String actual = PackagingOptimizer.optimize(input);
 
         // Assert
-        assertThat(actual).isEqualTo("163/8/41/6/8/9/52/5/7/73");
+        assertThat(actual).isEqualTo("163/81/46/82/9/55/73/7");
     }
 }
